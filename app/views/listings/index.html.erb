@@ -1,35 +1,73 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Listings</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Title</th>
-      <th>Location</th>
-      <th>Room nums</th>
-      <th>Bathroom nums</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<h1>listings</h1>
 
-  <tbody>
-    <% @listings.each do |listing| %>
-      <tr>
-        <td><%= listing.type %></td>
-        <td><%= listing.title %></td>
-        <td><%= listing.location %></td>
-        <td><%= listing.room_nums %></td>
-        <td><%= listing.bathroom_nums %></td>
-        <td><%= link_to 'Show', listing %></td>
-        <td><%= link_to 'Edit', edit_listing_path(listing) %></td>
-        <td><%= link_to 'Destroy', listing, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%#
+  Filterrific adds the `form_for_filterrific` view helper:
+  * adds dom id 'filterrific_filter'
+  * applies javascript behaviors:
+      * AJAX form submission on change
+      * AJAX spinner while AJAX request is being processed
+  * sets form_for options like :url, :method and input name prefix
+%>
+<%= form_for_filterrific @filterrific, html: { id: 'filterrific-no-ajax-auto-submit' do |f| %>
+  <div>
+    Title
+    <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+    <%= f.text_field(
+      :title,
+      class: 'filterrific-periodically-observed'
+    ) %>
+  </div>
+  <div>
+    Category
+    <%= f.select(
+      :category,
+      @filterrific.select_options[:category],
+      { include_blank: '- Any -' }
+    ) %>
+  </div>
+  <div>
+    Location
+    <%= f.select(
+      :location,
+      @filterrific.select_options[:location],
+      { include_blank: '- Any -' }
+    ) %>
+  </div>
+  <div>
+    Rooms
+    <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+    <%= f.number(
+      :room_nums,
+      class: 'filterrific-periodically-observed'
+    ) %>
+  </div>
+  <div>
+    Bathrooms
+    <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+    <%= f.number(
+      :bathroom_nums,
+      class: 'filterrific-periodically-observed'
+    ) %>
+  </div>
+  <div>
+    <%= link_to(
+      'Reset filters',
+      reset_filterrific_url,
+    ) %>
+  </div>
+  <%# add an automated spinner to your form when the list is refreshed %>
+  <%= render_filterrific_spinner %>
 
-<br>
+  <%= f.submit 'Filter' %>
+<% end %>
+
+<%= render(
+  partial: 'listings/list',
+  locals: { listings: @listings }
+) %>
+
 
 <%= link_to 'New Listing', new_listing_path %>

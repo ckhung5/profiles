@@ -1,0 +1,30 @@
+<div id="filterrific_results">
+
+  <div>
+    <%= page_entries_info listings # provided by will_paginate %>
+  </div>
+
+  <table>
+    <tr>
+      <th>filterrific_sorting_link(@filterrific, :category)</th>
+      <th>filterrific_sorting_link(@filterrific, :title)</th>
+      <th>filterrific_sorting_link(@filterrific, :location)</th>
+      <th>filterrific_sorting_link(@filterrific, :room_nums)Room nums</th>
+      <th>filterrific_sorting_link(@filterrific, :bathroom_nums)</th>
+    </tr>
+    <% listings.each do |listing| %>
+      <tr>
+        <td><%= listing.category %></td>
+        <td><%= listing.title %></td>
+        <td><%= listing.location %></td>
+        <td><%= listing.room_nums %></td>
+        <td><%= listing.bathroom_nums %></td>
+        <td><%= link_to 'Show', listing %></td>
+        <td><%= link_to 'Edit', edit_listing_path(listing) %></td>
+        <td><%= link_to 'Destroy', listing, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<%= will_paginate students # provided by will_paginate %>
